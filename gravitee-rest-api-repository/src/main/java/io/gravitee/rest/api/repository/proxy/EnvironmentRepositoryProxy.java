@@ -52,11 +52,6 @@ public class EnvironmentRepositoryProxy extends AbstractProxy<EnvironmentReposit
     }
 
     @Override
-    public Set<Environment> findAll() throws TechnicalException {
-        return target.findAll();
-    }
-
-    @Override
     public Set<Environment> findByOrganization(String organization) throws TechnicalException {
         return target.findByOrganization(organization);
     }

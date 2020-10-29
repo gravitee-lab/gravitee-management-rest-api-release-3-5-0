@@ -26,13 +26,11 @@ import io.gravitee.rest.api.model.UpdateEnvironmentEntity;
  */
 public interface EnvironmentService {
 
-    List<EnvironmentEntity> findAll();
-
     List<EnvironmentEntity> findByOrganization(String organizationId);
 
     EnvironmentEntity findById(String environmentId);
 
-    EnvironmentEntity createOrUpdate(UpdateEnvironmentEntity environment);
+    EnvironmentEntity createOrUpdate(String organizationId, String environmentId, UpdateEnvironmentEntity environment);
 
     void delete(String environmentId);
     

@@ -15,6 +15,7 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
+import io.gravitee.rest.api.service.common.GraviteeContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class DefaultEnvironmentUpgrader implements Upgrader, Ordered {
     @Override
     public boolean upgrade() {
         // initialize roles.
-        if (environmentService.findAll().isEmpty()) {
+        if (environmentService.findByOrganization(GraviteeContext.getDefaultEnvironment()).isEmpty()) {
             logger.info("    No environment found. Add default one.");
             environmentService.initialize();
         }

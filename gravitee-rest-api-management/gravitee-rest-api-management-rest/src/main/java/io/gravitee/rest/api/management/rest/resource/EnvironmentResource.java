@@ -43,52 +43,6 @@ public class EnvironmentResource extends AbstractResource {
     @Context
     private ResourceContext resourceContext;
 
-    @Inject
-    private EnvironmentService environmentService;
-
-    /**
-     * Create a new Environment.
-     * @param environmentEntity
-     * @return
-     */
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Create an Environment", tags = {"Environment"})
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "Environment successfully created"),
-            @ApiResponse(code = 500, message = "Internal server error")})
-    public Response createEnvironment(
-            @ApiParam(name = "environmentId", required = true) @PathParam("envId") String environmentId,
-            @ApiParam(name = "environmentEntity", required = true) @Valid @NotNull final UpdateEnvironmentEntity environmentEntity) {
-        environmentEntity.setId(environmentId);
-        return Response
-                .status(Status.CREATED)
-                .entity(environmentService.createOrUpdate(environmentEntity))
-                .build();
-    }
-
-    /**
-     * Delete an existing Environment.
-     * @param environmentId
-     * @return
-     */
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Delete an Environment", tags = {"Environment"})
-    @ApiResponses({
-            @ApiResponse(code = 204, message = "Environment successfully deleted"),
-            @ApiResponse(code = 500, message = "Internal server error")})
-    public Response deleteEnvironment(
-            @ApiParam(name = "environmentId", required = true)
-            @PathParam("envId") String environmentId) {
-        environmentService.delete(environmentId);
-        //TODO: should delete all items that refers to this environment
-        return Response
-                .status(Status.NO_CONTENT)
-                .build();
-    }
-
     @Path("alerts")
     public AlertsResource getAlertsResource() {
         return resourceContext.getResource(AlertsResource.class);
