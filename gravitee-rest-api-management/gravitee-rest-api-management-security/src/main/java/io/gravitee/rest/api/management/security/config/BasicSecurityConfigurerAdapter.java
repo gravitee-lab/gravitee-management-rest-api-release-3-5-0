@@ -230,6 +230,11 @@ public class BasicSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                 .antMatchers(HttpMethod.OPTIONS, "**").permitAll()
 
                 /*
+                 * Global auth resources.
+                 */
+                .antMatchers(HttpMethod.GET, "/auth/cockpit").permitAll()
+
+                /*
                  * organizations resources
                  */
                 // Auth resource

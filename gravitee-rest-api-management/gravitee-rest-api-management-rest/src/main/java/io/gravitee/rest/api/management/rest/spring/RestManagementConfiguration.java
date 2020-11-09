@@ -37,8 +37,7 @@ import java.util.Properties;
  */
 @Configuration
 @Import({
-        PropertiesConfiguration.class, PluginConfiguration.class, ServiceConfiguration.class,
-        SecurityManagementConfiguration.class, EmailConfiguration.class, IdentityProviderPluginConfiguration.class
+        PropertiesConfiguration.class, PluginConfiguration.class, ServiceConfiguration.class, EmailConfiguration.class, IdentityProviderPluginConfiguration.class
 })
 public class RestManagementConfiguration {
 
