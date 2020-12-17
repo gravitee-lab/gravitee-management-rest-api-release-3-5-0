@@ -19,12 +19,13 @@ import io.gravitee.rest.api.idp.api.identity.SearchableUser;
 import io.gravitee.rest.api.model.NewExternalUserEntity;
 import io.gravitee.rest.api.model.RegisterUserEntity;
 import io.gravitee.rest.api.model.UserEntity;
+import io.gravitee.rest.api.model.UserRoleEntity;
+import io.gravitee.rest.api.model.permissions.RoleScope;
 import io.gravitee.rest.api.portal.rest.model.FinalizeRegistrationInput;
 import io.gravitee.rest.api.portal.rest.model.RegisterUserInput;
 import io.gravitee.rest.api.portal.rest.model.User;
 import io.gravitee.rest.api.portal.rest.model.UserLinks;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,10 +33,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Florent CHAMFROY (florent.chamfroy at graviteesource.com)
@@ -91,6 +96,61 @@ public class UserMapperTest {
         assertEquals(USER_FIRSTNAME, responseUser.getFirstName());
         assertEquals(USER_LASTNAME, responseUser.getLastName());
         assertEquals(USER_FIRSTNAME + ' ' + USER_LASTNAME, responseUser.getDisplayName());
+    }
+
+    @Test
+    public void testConvertUserEntityWithPermissions() throws Exception {
+        Instant now = Instant.now();
+        Date nowDate = Date.from(now);
+
+        userMapper.afterPropertiesSet();
+
+        // init
+        UserEntity userEntity = new UserEntity();
+        UserRoleEntity userRoleEntityOrganization = new UserRoleEntity();
+        userRoleEntityOrganization.setId("org-id");
+        userRoleEntityOrganization.setScope(RoleScope.ORGANIZATION);
+        HashMap<String, char[]> organizationPermissions = new HashMap<>();
+        organizationPermissions.put("USER", new char[]{'C', 'R', 'U', 'D'});
+        organizationPermissions.put("ENVIRONMENT", new char[]{'C', 'R', 'U', 'D'});
+        userRoleEntityOrganization.setPermissions(organizationPermissions);
+
+        UserRoleEntity userRoleEntityEnvironment = new UserRoleEntity();
+        userRoleEntityEnvironment.setScope(RoleScope.ENVIRONMENT);
+        userRoleEntityEnvironment.setId("env-id");
+        HashMap<String, char[]> environmentPermissions = new HashMap<>();
+        environmentPermissions.put("INSTANCE", new char[]{'C', 'R', 'U', 'D'});
+        environmentPermissions.put("API", new char[]{'C', 'R', 'U', 'D'});
+        environmentPermissions.put("APPLICATION", new char[]{'C'});
+        environmentPermissions.put("PLATFORM", new char[]{'C', 'R'});
+        userRoleEntityEnvironment.setPermissions(environmentPermissions);
+
+        userEntity.setCreatedAt(nowDate);
+        userEntity.setEmail(USER_EMAIL);
+        userEntity.setFirstname(USER_FIRSTNAME);
+        userEntity.setId(USER_ID);
+        userEntity.setLastConnectionAt(nowDate);
+        userEntity.setLastname(USER_LASTNAME);
+        userEntity.setPassword(USER_PASSWORD);
+        userEntity.setPicture(USER_PICTURE);
+        userEntity.setRoles(new HashSet<>(Arrays.asList(userRoleEntityOrganization, userRoleEntityEnvironment)));
+        userEntity.setSource(USER_SOURCE);
+        userEntity.setSourceId(USER_SOURCE_ID);
+        userEntity.setStatus(USER_STATUS);
+        userEntity.setUpdatedAt(nowDate);
+
+        // Test
+        User responseUser = userMapper.convert(userEntity);
+        assertNotNull(responseUser);
+        assertEquals(USER_ID, responseUser.getId());
+        assertEquals(USER_EMAIL, responseUser.getEmail());
+        assertEquals(USER_FIRSTNAME, responseUser.getFirstName());
+        assertEquals(USER_LASTNAME, responseUser.getLastName());
+        assertEquals(USER_FIRSTNAME + ' ' + USER_LASTNAME, responseUser.getDisplayName());
+        assertTrue(responseUser.getPermissions().getINSTANCE().containsAll(Arrays.asList("C", "R", "U", "D")));
+        assertTrue(responseUser.getPermissions().getAPI().containsAll(Arrays.asList("C", "R", "U", "D")));
+        assertTrue(responseUser.getPermissions().getAPPLICATION().containsAll(Arrays.asList("C")));
+        assertTrue(responseUser.getPermissions().getPLATFORM().containsAll(Arrays.asList("C", "R")));
     }
 
     @Test

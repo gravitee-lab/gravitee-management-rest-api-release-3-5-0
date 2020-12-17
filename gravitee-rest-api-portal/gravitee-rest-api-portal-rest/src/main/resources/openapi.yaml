@@ -3633,6 +3633,106 @@ components:
           description: True if the user can edit the MyAccount information
           type: boolean
           default: false
+        permissions:
+          description: Map of Permissions.
+          type: object
+          properties:
+            INSTANCE:
+              type: array
+              items:
+                type: string
+            GROUP:
+              type: array
+              items:
+                type: string
+            TAG:
+              type: array
+              items:
+                type: string
+            TENANT:
+              type: array
+              items:
+                type: string
+            API:
+              type: array
+              items:
+                type: string
+            APPLICATION:
+              type: array
+              items:
+                type: string
+            PLATFORM:
+              type: array
+              items:
+                type: string
+            AUDIT:
+              type: array
+              items:
+                type: string
+            NOTIFICATION:
+              type: array
+              items:
+                type: string
+            MESSAGE:
+              type: array
+              items:
+                type: string
+            DICTIONARY:
+              type: array
+              items:
+                type: string
+            ALERT:
+              type: array
+              items:
+                type: string
+            ENTRYPOINT:
+              type: array
+              items:
+                type: string
+            SETTINGS:
+              type: array
+              items:
+                type: string
+            QUALITY_RULE:
+              type: array
+              items:
+                type: string
+            DASHBOARD:
+              type: array
+              items:
+                type: string
+            METADATA:
+              type: array
+              items:
+                type: string
+            DOCUMENTATION:
+              type: array
+              items:
+                type: string
+            CATEGORY:
+              type: array
+              items:
+                type: string
+            TOP_APIS:
+              type: array
+              items:
+                type: string
+            API_HEADER:
+              type: array
+              items:
+                type: string
+            IDENTITY_PROVIDER:
+              type: array
+              items:
+                type: string
+            CLIENT_REGISTRATION_PROVIDER:
+              type: array
+              items:
+                type: string
+            THEME:
+              type: array
+              items:
+                type: string
         config:
           $ref: '#/components/schemas/UserConfig'
         _links:
